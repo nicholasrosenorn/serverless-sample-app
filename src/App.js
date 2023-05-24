@@ -1,35 +1,28 @@
 import './App.css';
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {Table, Button} from "reactstrap"
 
 function App() {
-
   const [isLoading, setIsLoading] = useState(false);
-  const [invoices, setInvoices] = useState(
-    [
-      {
-        "id" : "100",
-        "Vendor": "Hancook",
-        "Amount" : "$1,800",
-        "Invoice": "1123",
-        "Date" : "05/23/2023"
-      },
-      {
-        "id" : "200",
-        "Vendor": "Hancook",
-        "Amount" : "$1,800",
-        "Invoice": "1234",
-        "Date" : "05/23/2023"
-      },
-      {
-        "id" : "300",
-        "Vendor": "Hancook",
-        "Amount" : "$1,800",
-        "Invoice": "1345",
-        "Date" : "05/23/2023"
-      }
-    ]
-  );
+  const [invoices, setInvoices] = useState([]);
+
+  async function componentDidMount() {
+    const response = await fetch('https://uiaemvqd7e.execute-api.us-east-2.amazonaws.com/Dev')
+    const body = await response.json()
+    setInvoices(body)
+  }
+
+  useEffect(() => {
+    async function getInvoices() {
+      const response = await fetch('https://uiaemvqd7e.execute-api.us-east-2.amazonaws.com/Dev')
+      const body = await response.json()
+      setInvoices(body)
+    }
+    getInvoices();
+ }, [])
+  //console.log(componentDidMount())
+  //console.log(invoices)
+
 
   function remove(id) {
     setInvoices(invoices.filter(i => i.id != id));
@@ -46,7 +39,6 @@ function App() {
       <td><Button className='btn btn-lg btn-info' onClick={() => remove(invoice.id)}>50%</Button></td>
       <td><Button className='btn btn-lg btn-waring' onClick={() => remove(invoice.id)}>??</Button></td>
       <td><Button className='btn btn-lg btn-info' onClick={() => remove(invoice.id)}>Image</Button></td>
-
     </tr>
 
     )
